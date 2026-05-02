@@ -182,4 +182,4 @@ MIT License — feel free to use, modify, and distribute.
 
 ---
 
-> Built with ❤️ by [Yash Rathore](https://github.com/YashRajcode04)
+> Built with ❤️ by [Yash Raj](https://github.com/YashRajcode04)

@@ -7,7 +7,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/expens
 
 const DEMO_EMAIL    = 'demo@expenseflow.com';
 const DEMO_PASSWORD = 'demo1234';
-const DEMO_NAME     = 'Yash Rathore';
+const DEMO_NAME     = 'Yash Raj';
 
 function date(daysAgo, hour = 10) {
   const d = new Date();
