@@ -46,10 +46,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 
 // Serve frontend for any non-API route
-app.get('*', (req, res) => {
+app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
 
 
 const MONGODB_URI = process.env.MONGODB_URI;
