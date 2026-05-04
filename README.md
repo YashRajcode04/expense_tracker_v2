@@ -166,7 +166,37 @@ The `/api/expenses/alerts` endpoint analyses your last 30 days vs the previous 3
 
 ---
 
+---
+
+## ☁️ Deployment to Vercel
+
+This project is configured for easy deployment to **Vercel** as a serverless function.
+
+### Steps:
+
+1. **Push to GitHub**:
+   Ensure your code is pushed to a GitHub repository.
+
+2. **Connect to Vercel**:
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard).
+   - Click **"Add New"** > **"Project"**.
+   - Import your GitHub repository.
+
+3. **Configure Environment Variables**:
+   In the Vercel project settings during import, add the following environment variables:
+   - `MONGODB_URI`: Your MongoDB Atlas connection string (Localhost will NOT work).
+   - `JWT_SECRET`: A secure random string for signing tokens.
+   - `VERCEL`: Set to `true` (This is used by `server.js` to optimize for serverless).
+
+4. **Deploy**:
+   - Click **"Deploy"**. Vercel will use the `vercel.json` file to configure the build and routes automatically.
+
+> **Note:** Since this app uses MongoDB, you must use a cloud-hosted database like [MongoDB Atlas](https://www.mongodb.com/cloud/atlas). Make sure to whitelist `0.0.0.0/0` in Atlas IP Access List or use Vercel's fixed IP if applicable.
+
+---
+
 ## 🤝 Contributing
+
 
 1. Fork the repo
 2. Create a feature branch: `git checkout -b feature/my-feature`
@@ -182,4 +212,4 @@ MIT License — feel free to use, modify, and distribute.
 
 ---
 
-> Built with ❤️ by [Yash Raj](https://github.com/YashRajcode04)
+
