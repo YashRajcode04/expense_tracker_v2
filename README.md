@@ -1,6 +1,10 @@
 # 💸 ExpenseFlow — Smart Expense Tracker
 
-A full-stack, production-ready personal finance tracker built with **Node.js**, **Express**, **MongoDB**, and a premium dark-mode UI. Track income & expenses, visualise spending patterns, and get AI-powered financial alerts — all in one beautiful dashboard.
+A full-stack, production-ready personal finance tracker built with **Node.js**, **Express**, **MongoDB**, and a premium dark-mode UI.
+
+**[🚀 View Live Demo](https://expense-tracker-v2-pearl.vercel.app/)**
+
+![Dashboard Preview](images/dashboard_preview.png)
 
 ---
 
@@ -21,8 +25,8 @@ A full-stack, production-ready personal finance tracker built with **Node.js**, 
 ## 🖥️ Tech Stack
 
 **Backend**
-- Node.js + Express 5
-- MongoDB + Mongoose 9
+- Node.js + Express 4
+- MongoDB + Mongoose 8
 - JSON Web Tokens (jsonwebtoken)
 - bcryptjs password hashing
 - cookie-parser, cors, dotenv
