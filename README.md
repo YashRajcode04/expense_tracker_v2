@@ -4,7 +4,12 @@ A full-stack, production-ready personal finance tracker built with **Node.js**, 
 
 **[🚀 View Live Demo](https://expense-tracker-v2-pearl.vercel.app/)**
 
-![Dashboard Preview](images/dashboard_preview.png)
+### 📸 App Screenshots
+| | |
+|---|---|
+| ![Step 0](images/0.png) | ![Step 1](images/1.png) |
+| ![Step 2](images/2.png) | ![Step 3](images/3.png) |
+| ![Step 4](images/4.png) | ![Step 5](images/5.png) |
 
 ---
 
