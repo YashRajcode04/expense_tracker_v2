@@ -1,12 +1,16 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 
+// Catch process errors to prevent silent crashes
+process.on('uncaughtException', (err) => console.error('🔥 UNCAUGHT EXCEPTION:', err.message, err.stack));
+process.on('unhandledRejection', (reason) => console.error('🔥 UNHANDLED REJECTION:', reason));
+
 const authRoutes = require('./routes/auth');
 const expenseRoutes = require('./routes/expenses');
+
 
 const app = express();
 
