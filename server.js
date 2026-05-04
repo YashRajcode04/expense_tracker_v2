@@ -31,23 +31,33 @@ app.get('/{*splat}', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/expense-tracker';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // Database connection management for Serverless
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) return;
+  if (isConnected && mongoose.connection.readyState === 1) return;
   
+  if (!MONGODB_URI) {
+    console.error('❌ MONGODB_URI is not defined in environment variables!');
+    throw new Error('Database configuration missing');
+  }
+
+  // Log masked URI for debugging
+  const maskedURI = MONGODB_URI.replace(/:([^@]+)@/, ':****@');
+  console.log('📡 Attempting to connect to:', maskedURI);
+
   try {
     const db = await mongoose.connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
+      family: 4 // Force IPv4 to avoid some Vercel/Atlas networking issues
     });
     isConnected = db.connections[0].readyState === 1;
-    console.log('✅ Connected to MongoDB');
+    console.log('✅ Connected to MongoDB Atlas');
   } catch (err) {
-    console.error('❌ MongoDB connection error:', err.message);
+    console.error('❌ MongoDB Connection Error Details:', err.message);
     throw err;
   }
 };
@@ -59,12 +69,18 @@ app.use(async (req, res, next) => {
       await connectDB();
       next();
     } catch (err) {
-      res.status(500).json({ success: false, message: 'Server connection error. Please try again later.' });
+      console.error('API Error (DB Connection):', err.message);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Database connection failed. Please check Atlas IP whitelist and Vercel Env variables.',
+        debug: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
     }
   } else {
     next();
   }
 });
+
 
 // Start server if not on Vercel
 if (!process.env.VERCEL) {
