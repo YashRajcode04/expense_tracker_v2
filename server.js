@@ -31,20 +31,40 @@ app.get('/{*splat}', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/expense-tracker';
 
-mongoose.connect(MONGODB_URI, {
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-  socketTimeoutMS: 45000,
-})
-  .then(() => {
-    console.log('✅ Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err.message);
-  });
+// Database connection management for Serverless
+let isConnected = false;
 
+const connectDB = async () => {
+  if (isConnected) return;
+  
+  try {
+    const db = await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    isConnected = db.connections[0].readyState === 1;
+    console.log('✅ Connected to MongoDB');
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err.message);
+    throw err;
+  }
+};
+
+// Middleware to ensure DB connection for API routes
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    try {
+      await connectDB();
+      next();
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Server connection error. Please try again later.' });
+    }
+  } else {
+    next();
+  }
+});
 
 // Start server if not on Vercel
 if (!process.env.VERCEL) {
@@ -56,4 +76,5 @@ if (!process.env.VERCEL) {
 
 // Export the app for Vercel
 module.exports = app;
+
 
