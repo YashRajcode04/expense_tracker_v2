@@ -22,14 +22,35 @@ app.use(cookieParser());
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware to ensure DB connection for API routes
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    try {
+      await connectDB();
+      next();
+    } catch (err) {
+      console.error('API Error (DB Connection):', err.message);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Database connection failed. Please check Atlas IP whitelist and Vercel Env variables.',
+        debug: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    }
+  } else {
+    next();
+  }
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/expenses', expenseRoutes);
 
 // Serve frontend for any non-API route
-app.get('/{*splat}', (req, res) => {
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) return next();
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -62,27 +83,9 @@ const connectDB = async () => {
   }
 };
 
-// Middleware to ensure DB connection for API routes
-app.use(async (req, res, next) => {
-  if (req.path.startsWith('/api')) {
-    try {
-      await connectDB();
-      next();
-    } catch (err) {
-      console.error('API Error (DB Connection):', err.message);
-      res.status(500).json({ 
-        success: false, 
-        message: 'Database connection failed. Please check Atlas IP whitelist and Vercel Env variables.',
-        debug: process.env.NODE_ENV === 'development' ? err.message : undefined
-      });
-    }
-  } else {
-    next();
-  }
-});
-
 
 // Start server if not on Vercel
+
 if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
