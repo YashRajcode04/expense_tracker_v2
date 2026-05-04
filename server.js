@@ -34,19 +34,17 @@ app.get('/{*splat}', (req, res) => {
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/expense-tracker';
 
-mongoose.connect(MONGODB_URI)
+mongoose.connect(MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+  socketTimeoutMS: 45000,
+})
   .then(() => {
     console.log('✅ Connected to MongoDB');
   })
   .catch((err) => {
     console.error('❌ MongoDB connection error:', err.message);
-    if (!process.env.VERCEL) {
-      console.log('\n📋 Make sure MongoDB is running. You can:');
-      console.log('   1. Install MongoDB locally: https://www.mongodb.com/try/download/community');
-      console.log('   2. Use MongoDB Atlas (cloud): https://www.mongodb.com/cloud/atlas');
-      console.log('   3. Update MONGODB_URI in .env file with your connection string\n');
-    }
   });
+
 
 // Start server if not on Vercel
 if (!process.env.VERCEL) {
